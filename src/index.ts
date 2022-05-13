@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useLayoutEffect, useRef } from 'react';
 
 /**
  * Returns a memoized version of your function that maintains a stable reference, but
@@ -8,7 +8,9 @@ export default function useStableCallback<Args extends any[], T>(
   callback: (...args: Args) => T
 ) {
   const callbackContainer = useRef(callback);
-  callbackContainer.current = callback;
+  useLayoutEffect(() => {
+    callbackContainer.current = callback;
+  });
   return useCallback(
     (...args: Args) => callbackContainer.current(...args),
     [callbackContainer]
